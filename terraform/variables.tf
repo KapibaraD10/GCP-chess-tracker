@@ -24,11 +24,11 @@ variable "service_name" {
 variable "github_owner" {
   description = "GitHub repository owner"
   type        = string
-  default     = "YOUR_GITHUB_USER" # User should update this
+  default     = "KapibaraD10"
 }
 
 variable "github_repo" {
   description = "GitHub repository name"
   type        = string
-  default     = "YOUR_REPO_NAME" # User should update this
+  default     = "GCP-chess-tracker"
 }
