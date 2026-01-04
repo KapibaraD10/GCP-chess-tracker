@@ -1,24 +1,30 @@
-# Cloud Build Service Account needs permission to deploy to Cloud Run
-resource "google_project_iam_member" "build_run_admin" {
+# Create a dedicated service account for Cloud Build to use for running builds.
+resource "google_service_account" "cloudbuild_sa" {
+  account_id   = "${var.service_name}-builder-sa"
+  display_name = "Cloud Build SA for ${var.service_name}"
+  project      = var.project_id
+}
+
+# Grant the new Cloud Build SA the Cloud Run Admin role to deploy services.
+resource "google_project_iam_member" "cloudbuild_run_admin" {
   project = var.project_id
   role    = "roles/run.admin"
-  member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+  member  = google_service_account.cloudbuild_sa.member
 }
 
-resource "google_project_iam_member" "build_sa_user" {
-  project = var.project_id
-  role    = "roles/iam.serviceAccountUser"
-  member  = "serviceAccount:${data.google_project.project.number}@cloudbuild.gserviceaccount.com"
+# Grant the new Cloud Build SA the ability to act as (impersonate) the Cloud Run service's SA.
+resource "google_service_account_iam_member" "cloudbuild_act_as_run_sa" {
+  service_account_id = google_service_account.run_sa.name
+  role               = "roles/iam.serviceAccountUser"
+  member             = google_service_account.cloudbuild_sa.member
 }
 
-# Cloud Run SA needs permission to write metrics
-# By default Cloud Run uses the Compute Engine default service account.
-# It usually has Editor, but best practice is a dedicated SA. 
-# For simplicity, we'll ensure the default one has Monitoring Metric Writer.
-resource "google_project_iam_member" "run_metric_writer" {
-  project = var.project_id
-  role    = "roles/monitoring.metricWriter"
-  member  = "serviceAccount:${data.google_project.project.number}-compute@developer.gserviceaccount.com"
+# Grant the new Cloud Build SA permission to write to the Artifact Registry repository.
+# This is more secure than granting project-wide storage permissions.
+resource "google_artifact_registry_repository_iam_member" "cloudbuild_artifact_writer" {
+  project    = var.project_id
+  location   = var.region
+  repository = google_artifact_registry_repository.repo.name
+  role       = "roles/artifactregistry.writer"
+  member     = google_service_account.cloudbuild_sa.member
 }
-
-data "google_project" "project" {}

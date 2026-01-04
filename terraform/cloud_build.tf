@@ -1,27 +1,34 @@
-resource "google_cloudbuild_trigger" "build_main" {
-  name        = "chess-app-main-trigger"
-  description = "Build and deploy on push to main"
-  
-  # This relies on the repo being connected manually in the console first
-  # or via the google_cloudbuildv2_repository resource if we used the 
-  # newer 2nd gen repository connection (which requires more setup).
-  # For simplicity with the standard trigger:
-  
+# This file uses a 1st Generation Cloud Build trigger for a direct connection to GitHub.
+
+# Create a 1st Generation Cloud Build trigger.
+# This requires you to have connected your GitHub repository to Cloud Build
+# via the GCP Console at least once.
+resource "google_cloudbuild_trigger" "main_branch" {
+  project  = var.project_id
+  name     = "${var.service_name}-main-branch-trigger"
+  location = "global" # 1st Gen GitHub triggers must be in the 'global' location
+
+  # This block is for 1st Gen triggers and relies on the connection
+  # made in the GCP Console.
   github {
     owner = var.github_owner
     name  = var.github_repo
-    push {
-      branch = "^main$"
-    }
+    push { branch = "^main$" }
   }
 
+  # Specify the dedicated service account for this trigger to run with.
+  service_account = google_service_account.cloudbuild_sa.id
+
+  # Point to a build configuration file in the repository
   filename = "cloudbuild.yaml"
 
+  # Pass variables to the build
   substitutions = {
-    _REGION       = var.region
-    _REPO_NAME    = var.repo_name
     _SERVICE_NAME = var.service_name
+    _REGION       = var.region
+    _REPO_NAME    = var.repo_name # This should be the Artifact Registry repo name, not the GitHub repo name.
   }
 
-  depends_on = [google_project_service.apis, google_artifact_registry_repository.repo]
+  # Ensure the Artifact Registry repo exists before creating the trigger.
+  depends_on = [google_artifact_registry_repository.repo]
 }

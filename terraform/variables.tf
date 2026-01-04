@@ -1,34 +1,34 @@
 variable "project_id" {
-  description = "The GCP Project ID"
+  description = "The GCP project ID to deploy resources into."
   type        = string
 }
 
 variable "region" {
-  description = "The GCP Region"
+  description = "The GCP region to deploy resources into."
   type        = string
-  default     = "us-central1"
-}
-
-variable "repo_name" {
-  description = "Name of the Artifact Registry repository"
-  type        = string
-  default     = "chess-app-repo"
+  default     = "europe-central2"
 }
 
 variable "service_name" {
-  description = "Name of the Cloud Run service"
+  description = "The name of the Cloud Run service."
   type        = string
   default     = "chess-app"
 }
 
+variable "repo_name" {
+  description = "The name of the Artifact Registry repository."
+  type        = string
+  default     = "chess-app-repo"
+}
+
 variable "github_owner" {
-  description = "GitHub repository owner"
+  description = "The owner of the GitHub repository."
   type        = string
   default     = "KapibaraD10"
 }
 
 variable "github_repo" {
-  description = "GitHub repository name"
+  description = "The name of the GitHub repository."
   type        = string
   default     = "GCP-chess-tracker"
 }
