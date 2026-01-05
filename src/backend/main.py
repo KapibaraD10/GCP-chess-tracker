@@ -38,6 +38,10 @@ def report_search_metric(username: str):
     series.metric.type = "custom.googleapis.com/chess_app/user_searches"
     series.resource.type = "global"
     
+    # Add a unique label to ensure points aren't deduped if sent in same interval
+    import uuid
+    series.metric.labels["request_id"] = str(uuid.uuid4())
+    
     # Add a point
     now = time.time()
     seconds = int(now)
