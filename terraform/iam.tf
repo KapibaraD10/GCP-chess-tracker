@@ -28,3 +28,12 @@ resource "google_artifact_registry_repository_iam_member" "cloudbuild_artifact_w
   role       = "roles/artifactregistry.writer"
   member     = google_service_account.cloudbuild_sa.member
 }
+
+# --- NEW: Cloud Run Service Account Permissions ---
+
+# Grant the Cloud Run SA permission to write metrics to Cloud Monitoring
+resource "google_project_iam_member" "run_sa_metric_writer" {
+  project = var.project_id
+  role    = "roles/monitoring.metricWriter"
+  member  = google_service_account.run_sa.member
+}
