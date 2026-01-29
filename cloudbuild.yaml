@@ -7,22 +7,20 @@ steps:
       - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
       - '-t'
       - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME:latest'
-      - '-f'
-      - 'src/Dockerfile'
-      - './src'
+      - 'src/.'
     id: 'Build'
 
   # Push the container image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
-      - 'push' # Push both tags at once
+      - 'push'
       - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_SERVICE_NAME'
       - '--all-tags'
     id: 'Push'
 
   # Deploy container image to Cloud Run
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'gcloud'
+    entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
@@ -33,8 +31,6 @@ steps:
       - '$_REGION'
       - '--platform'
       - 'managed'
-      - '--port'
-      - '8080'
       - '--allow-unauthenticated'
     id: 'Deploy'
 
