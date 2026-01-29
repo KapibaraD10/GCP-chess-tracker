@@ -1,0 +1,38 @@
+digraph "GCP Chess Tracker Architecture" {
+	graph [bgcolor=white fontcolor="#2D3436" fontname="Sans-Serif" fontsize=25 label="GCP Chess Tracker Architecture" labelloc=t nodesep=0.6 pad=0.5 rankdir=LR ranksep=0.75 splines=spline]
+	node [fixedsize=true fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 height=1.4 imagescale=true labelloc=b shape=box style=rounded width=1.4]
+	edge [color="#7B8894"]
+	"6bcbe1ebfef94f95adf6fece3c68d31a" -> a430528e27694a5db745b56c7f5a307d [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 style=invis]
+	a430528e27694a5db745b56c7f5a307d -> "8bd37dc0635548b49b4110d7691531be" [dir=none fontcolor="#2D3436" fontname="Sans-Serif" fontsize=13 style=invis]
+	subgraph "cluster_External World" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="External World" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		"6bcbe1ebfef94f95adf6fece3c68d31a" [label="GitHub Repo" height=1.9 image="E:\Python312\Lib\site-packages\resources/onprem/vcs\github.png" shape=none]
+		a430528e27694a5db745b56c7f5a307d [label="User (Browser)" height=1.9 image="E:\Python312\Lib\site-packages\resources/onprem/client\user.png" shape=none]
+		"8bd37dc0635548b49b4110d7691531be" [label="Lichess API" height=1.9 image="E:\Python312\Lib\site-packages\resources/onprem/network\internet.png" shape=none]
+	}
+	subgraph "cluster_Google Cloud Platform" {
+		graph [bgcolor="#E5F5FD" fontname="Sans-Serif" fontsize=12 label="Google Cloud Platform" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+		subgraph "cluster_1. CI/CD" {
+			graph [bgcolor="#EBF3E7" fontname="Sans-Serif" fontsize=12 label="1. CI/CD" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+			"0f0024d21cfd476295634fe567c2586f" [label="Cloud Build" height=1.9 image="E:\Python312\Lib\site-packages\resources/gcp/devtools\build.png" shape=none]
+			"937bfd961fe04a65be1080c2ee54e9be" [label="Artifact Registry" height=1.9 image="E:\Python312\Lib\site-packages\resources/gcp/devtools\container-registry.png" shape=none]
+		}
+		subgraph "cluster_2. Runtime & Hosting" {
+			graph [bgcolor="#EBF3E7" fontname="Sans-Serif" fontsize=12 label="2. Runtime & Hosting" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+			"05edb3edd9a640989bdcf3166a729444" [label="Cloud Run
+(React + FastAPI)" height=2.3 image="E:\Python312\Lib\site-packages\resources/gcp/compute\run.png" shape=none]
+		}
+		subgraph "cluster_3. Observability" {
+			graph [bgcolor="#EBF3E7" fontname="Sans-Serif" fontsize=12 label="3. Observability" labeljust=l pencolor="#AEB6BE" rankdir=LR shape=box style=rounded]
+			"28a1a8ef235e4e50b6d4dd65ab56589d" [label="Cloud Monitoring" height=1.9 image="E:\Python312\Lib\site-packages\resources/gcp/operations\monitoring.png" shape=none]
+		}
+	}
+	"6bcbe1ebfef94f95adf6fece3c68d31a" -> "0f0024d21cfd476295634fe567c2586f" [label="Push (Main)" color=darkorange dir=forward fontcolor=darkorange fontname="Sans-Serif" fontsize=13 minlen=2.5]
+	"0f0024d21cfd476295634fe567c2586f" -> "937bfd961fe04a65be1080c2ee54e9be" [label="Build & Push" color=darkorange dir=forward fontcolor=darkorange fontname="Sans-Serif" fontsize=13]
+	"0f0024d21cfd476295634fe567c2586f" -> "05edb3edd9a640989bdcf3166a729444" [label=Deploy color=darkorange dir=forward fontcolor=darkorange fontname="Sans-Serif" fontsize=13]
+	"937bfd961fe04a65be1080c2ee54e9be" -> "05edb3edd9a640989bdcf3166a729444" [label="Pull Image" color=blue dir=forward fontcolor=blue fontname="Sans-Serif" fontsize=13 style=dashed]
+	a430528e27694a5db745b56c7f5a307d -> "05edb3edd9a640989bdcf3166a729444" [label="HTTPS /api/..." color=green dir=forward fontcolor=darkgreen fontname="Sans-Serif" fontsize=13 minlen=2.5 style=bold]
+	"05edb3edd9a640989bdcf3166a729444" -> "8bd37dc0635548b49b4110d7691531be" [label="Fetch Stats" color=black dir=forward fontcolor=black fontname="Sans-Serif" fontsize=13 minlen=2.5]
+	"05edb3edd9a640989bdcf3166a729444" -> "28a1a8ef235e4e50b6d4dd65ab56589d" [label="Custom Metric
+(UUID Label)" color=purple dir=forward fontcolor=purple fontname="Sans-Serif" fontsize=13]
+}

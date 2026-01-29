@@ -6,14 +6,6 @@ resource "google_service_account" "run_sa" {
   project      = var.project_id
 }
 
-# Grant the service account permissions to access other GCP services.
-# For example, grant Storage Admin role if the service needs to read/write to GCS.
-resource "google_project_iam_member" "run_sa_storage_admin" {
-  project = var.project_id
-  role    = "roles/storage.admin"
-  member  = google_service_account.run_sa.member
-}
-
 # Note: Terraform will try to create this immediately. 
 # If the image doesn't exist yet (because Cloud Build hasn't run), this might fail.
 # A common pattern is to deploy a "Hello World" placeholder first or rely on Cloud Build 
@@ -67,4 +59,8 @@ resource "google_cloud_run_service_iam_member" "noauth" {
   location = google_cloud_run_service.default.location
   role     = "roles/run.invoker"
   member   = "allUsers"
+
+  depends_on = [
+    google_cloud_run_service.default,
+  ]
 }
