@@ -37,7 +37,7 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>Chess Stats Lookup</h1>
+      <h1>GCP Chess Tracker</h1>
       <form onSubmit={fetchUser} className="search-form">
         <input
           type="text"
