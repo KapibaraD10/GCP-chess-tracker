@@ -35,33 +35,30 @@ The project follows a serverless architecture for scalability and cost-efficienc
    uvicorn main:app --reload
    ```
 
-## 🚢 Deployment
+## 🚢 Deployment (Automated)
+
+The project uses a fully automated CI/CD pipeline. No manual deployment scripts are required.
 
 ### 1. Infrastructure (Terraform)
-To setup or update the GCP environment:
+Infrastructure is managed as code. To apply changes to the GCP environment:
 ```powershell
 cd terraform
 terraform init
 terraform apply
 ```
 
-### 2. Application Code
-There are two ways to deploy your code:
-
-#### **A. Local Deployment (Recommended for testing)**
-Use the provided PowerShell script to build and deploy immediately from your machine:
-```powershell
-.\deploy.ps1
-```
-
-#### **B. Automated CI/CD (GitHub)**
-Push your changes to the `main` branch:
-```bash
-git add .
-git commit -m "Your message"
-git push origin main
-```
-*Note: Requires a one-time connection between GitHub and GCP Console.*
+### 2. Application Code (CI/CD)
+The application is automatically built and deployed whenever changes are pushed to the `main` branch:
+1. **Commit your changes**:
+   ```bash
+   git add .
+   git commit -m "Your descriptive message"
+   ```
+2. **Push to GitHub**:
+   ```bash
+   git push origin main
+   ```
+Google Cloud Build will detect the push, build a new Docker image, and update the Cloud Run service automatically.
 
 ## 📊 Monitoring
 The application exports custom metrics to **Google Cloud Monitoring**, allowing you to track API usage and performance in real-time.
