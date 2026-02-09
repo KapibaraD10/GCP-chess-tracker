@@ -29,6 +29,13 @@ resource "google_artifact_registry_repository_iam_member" "cloudbuild_artifact_w
   member     = google_service_account.cloudbuild_sa.member
 }
 
+# Grant the Cloud Build SA permission to write logs to Cloud Logging.
+resource "google_project_iam_member" "cloudbuild_logging_writer" {
+  project = var.project_id
+  role    = "roles/logging.logWriter"
+  member  = google_service_account.cloudbuild_sa.member
+}
+
 # --- NEW: Cloud Run Service Account Permissions ---
 
 # Grant the Cloud Run SA permission to write metrics to Cloud Monitoring

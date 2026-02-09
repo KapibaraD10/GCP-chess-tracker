@@ -1,30 +1,67 @@
-# GCP Chess Tracker
-<!-- CI/CD Test Commit -->
+# GCP Chess Tracker ♟️
 
-A serverless web application that fetches and displays Lichess user statistics. Built with a React frontend and Python FastAPI backend, deployed on Google Cloud Platform.
+A serverless web application that fetches and displays Lichess user statistics. This project demonstrates a modern full-stack architecture deployed on **Google Cloud Platform** using **Terraform** for Infrastructure as Code (IaC).
 
-## Features
-- **Lichess Integration**: Real-time chess statistics fetching.
-- **Modern UI**: Built with React and Vite.
-- **Serverless**: Powered by Google Cloud Run.
-- **CI/CD**: Automated deployment via Google Cloud Build.
-- **Observability**: Custom metrics tracked in Google Cloud Monitoring.
+## 🚀 Live Demo
+Access the application here: **[https://chess-app-fb5fcaevia-lm.a.run.app](https://chess-app-fb5fcaevia-lm.a.run.app)**
 
-## Architecture
-- **Frontend**: React (Vite)
-- **Backend**: FastAPI (Python)
-- **Infrastructure**: Terraform
-- **Platform**: Google Cloud (Cloud Run, Artifact Registry, Cloud Build)
+## 🏗️ Architecture
+The project follows a serverless architecture for scalability and cost-efficiency:
+- **Frontend**: React (Vite) - Single Page Application.
+- **Backend**: FastAPI (Python) - Handles logic and external API calls.
+- **Infrastructure**: Terraform - Manages GCP resources.
+- **CI/CD**: Google Cloud Build - Automated builds triggered by GitHub or locally.
+- **Storage**: Artifact Registry - Stores Docker images.
+- **Execution**: Cloud Run - Serverless compute platform.
 
-## Local Development
-Requires Docker.
-```bash
-# General build and run (if using standard Docker)
-docker build -t chess-app src/
-docker run -p 8080:8080 chess-app
+## 🛠️ Local Development
+
+### Prerequisites
+- Python 3.9+
+- Node.js & npm
+- Google Cloud CLI (gcloud)
+- Terraform
+
+### Setup
+1. **Clone the repo**:
+   ```bash
+   git clone https://github.com/KapibaraD10/GCP-chess-tracker.git
+   cd GCP-chess-tracker
+   ```
+2. **Local Backend**:
+   ```bash
+   cd src/backend
+   pip install -r requirements.txt
+   uvicorn main:app --reload
+   ```
+
+## 🚢 Deployment
+
+### 1. Infrastructure (Terraform)
+To setup or update the GCP environment:
+```powershell
+cd terraform
+terraform init
+terraform apply
 ```
 
-## Deployment
-Automated via GitHub push to the `main` branch.
-1. Infrastructure managed via Terraform in `/terraform`.
-2. Build pipeline defined in `cloudbuild.yaml`.
+### 2. Application Code
+There are two ways to deploy your code:
+
+#### **A. Local Deployment (Recommended for testing)**
+Use the provided PowerShell script to build and deploy immediately from your machine:
+```powershell
+.\deploy.ps1
+```
+
+#### **B. Automated CI/CD (GitHub)**
+Push your changes to the `main` branch:
+```bash
+git add .
+git commit -m "Your message"
+git push origin main
+```
+*Note: Requires a one-time connection between GitHub and GCP Console.*
+
+## 📊 Monitoring
+The application exports custom metrics to **Google Cloud Monitoring**, allowing you to track API usage and performance in real-time.
