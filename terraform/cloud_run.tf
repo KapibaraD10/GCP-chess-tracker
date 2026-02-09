@@ -4,7 +4,7 @@ resource "google_service_account" "run_sa" {
   display_name = "Service Account for ${var.service_name}"
   project      = var.project_id
 }
-
+# fhuafgu
 resource "google_cloud_run_service" "default" {
   name     = var.service_name
   location = var.region
