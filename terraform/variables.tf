@@ -33,3 +33,9 @@ variable "github_repo" {
   type        = string
   default     = "GCP-chess-tracker"
 }
+
+variable "image_tag" {
+  description = "The tag of the image to deploy."
+  type        = string
+  default     = "latest"
+}

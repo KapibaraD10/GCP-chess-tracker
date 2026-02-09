@@ -24,7 +24,7 @@ resource "google_cloud_run_service" "default" {
     spec {
       service_account_name = google_service_account.run_sa.email
       containers {
-        image = "gcr.io/cloudrun/hello" # Placeholder to let TF apply succeed
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${var.repo_name}/${var.service_name}:${var.image_tag}"
         ports {
           container_port = 8080
         }
@@ -43,14 +43,10 @@ resource "google_cloud_run_service" "default" {
 
   depends_on = [
     google_project_service.apis,
-    google_service_account.run_sa, # Ensure SA exists before creating the service
+    google_project_iam_member.cloudbuild_run_admin, # To make sure we can deploy
+    google_service_account.run_sa,
+    google_artifact_registry_repository.repo, # Ensure repo exists first
   ]
-  
-  lifecycle {
-    ignore_changes = [
-      template[0].spec[0].containers[0].image, # Ignore image changes as Cloud Build manages them
-    ]
-  }
 }
 
 # Allow unauthenticated access
